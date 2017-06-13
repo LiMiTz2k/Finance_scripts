@@ -45,4 +45,23 @@ def put_price(strike, time)
   Math.exp( - @interest_rate * time ) * ( - spot(time) * norm.cdf(-d1) + strike * norm.cdf(-d2))
 end
 
+def delta(strike, time)
+  norm = Rubystats::NormalDistribution.new(0,1)
+  d1 = Math.log(spot(time) / strike) + 0.5 * (@volatility)* Math.sqrt(time)
+  puts "Do you want the delta for a put or call option?"
+  response = gets.chomp.downcase
+  if response === "call"
+    norm.cdf(d1)
+  elsif response == "put"
+    norm.cdf(d1) - 1
+  else
+    puts "Sorry I didn't get that. Please try again."
+    delta(strike, time)
+  end
 end
+
+end
+
+p = Asset.new(20, 0.50, 20.00)
+
+puts p.delta(40, 1)
